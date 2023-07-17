@@ -35,8 +35,8 @@ const getCurrentUserController = async (req, res) => {
 };
 
 const getUserController = async (req, res) => {
-  const users = await getUsers();
-  return res.status(200).json(users);
+  // const users = await getUsers();
+  return res.status(200).json("good!!!");
 };
 
 const userVerificationCheckController = async (req, res) => {
