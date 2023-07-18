@@ -4,7 +4,7 @@ const {
   loginUser,
   logoutUser,
   getCurrentUser,
-  getUsers,
+  // getUsers,
   userVerificationCheck,
   reVerification,
 } = require("../services/usersServices");
