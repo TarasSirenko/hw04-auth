@@ -1,5 +1,5 @@
 const app = require("../app")
-const { connectMongo } = require("./db/mongooseConection");
+const { connectMongo } = require("../db/mongooseConection");
 require("dotenv").config();
 
 connectMongo()
