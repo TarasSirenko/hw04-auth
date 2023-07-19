@@ -4,7 +4,7 @@ const {
   loginUser,
   logoutUser,
   getCurrentUser,
-  // getUsers,
+  getUsers,
   userVerificationCheck,
   reVerification,
 } = require("../services/usersServices");
@@ -35,8 +35,8 @@ const getCurrentUserController = async (req, res) => {
 };
 
 const getUserController = async (req, res) => {
-  // const users = await getUsers();
-  return res.status(200).json("good!!!");
+  const users = await getUsers();
+  return res.status(200).json(users);
 };
 
 const userVerificationCheckController = async (req, res) => {
