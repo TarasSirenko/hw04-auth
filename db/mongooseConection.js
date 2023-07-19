@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 async function connectMongo() {
-   return await mongoose.connect(process.env.MONGO_URL);
+   return await mongoose.connect(process.env.MONGODB_URI);
 }
 
 module.exports = {
