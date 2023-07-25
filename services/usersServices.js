@@ -9,31 +9,30 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 
 
-const createUser = async ({ email, password }, res) => {
+const createUser = async (email, password, res, baseUrl) => {
   const emailExists = await Users.findOne({ email: email });
   if (emailExists) {
     return res.status(409).json({ message: "Email already in use" });
   }
-    const hashedPassword = await bcyrpt.hash(password, 10);
-    const verificationToken = uuidv4();
+  const hashedPassword = await bcyrpt.hash(password, 10);
+  const verificationToken = uuidv4();
 
-const msg = {
-  to: email,
-  from: "tarassirenko71@gmail.com",
-  subject: "Test email confirmation at login",
-  text: `Follow the <a href="http://localhost:3030/api/users/verify/${verificationToken}">link</a> to confirm your registration.`,
-  html: `Follow the <a href="http://localhost:3030/api/users/verify/${verificationToken}">link</a> to confirm your registration.`,
-};
-sgMail
-  .send(msg)
-  .then(() => {
-    console.log("Email sent");
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+  const msg = {
+    to: email,
+    from: "tarassirenko71@gmail.com",
+    subject: "Test email confirmation at login",
+    text: `Follow the <a href="${baseUrl}/api/users/verify/${verificationToken}">link</a> to confirm your registration.`,
+    html: `Follow the <a href="${baseUrl}/api/users/verify/${verificationToken}">link</a> to confirm your registration.`,
+  };
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Email sent");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 
-    
   await Users.create({ email, password: hashedPassword, verificationToken });
   res.status(201).json({ email, subscription: "starter" });
 };
@@ -106,29 +105,28 @@ const userVerificationCheck = async (verificationToken) => {
     
 };
 
-const reVerification = async (email) => {
-    const user = await Users.findOne({ email });
-    if (!user) throw new Error("User not found");
-    if(user.verify) return null;
-    
+const reVerification = async (email, baseUrl) => {
+  const user = await Users.findOne({ email });
+  if (!user) throw new Error("User not found");
+  if (user.verify) return null;
 
-      const verificationToken = uuidv4();
-const msg =  {
-      to: email,
-      from: "tarassirenko71@gmail.com",
-      subject: "Test email confirmation at login",
-      text: `Follow the <a href="http://localhost:3030/api/users/verify/${verificationToken}">link</a> to confirm your registration.`,
-      html: `Follow the <a href="http://localhost:3030/api/users/verify/${verificationToken}">link</a> to confirm your registration.`,
-    };
-      sgMail
-        .send(msg)
-        .then(() => {
-          console.log("Email sent");
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    
+  const verificationToken = uuidv4();
+  const msg = {
+    to: email,
+    from: "tarassirenko71@gmail.com",
+    subject: "Test email confirmation at login",
+    text: `Follow the <a href="${baseUrl}/api/users/verify/${verificationToken}">link</a> to confirm your registration.`,
+    html: `Follow the <a href="${baseUrl}/api/users/verify/${verificationToken}">link</a> to confirm your registration.`,
+  };
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Email sent");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
   return await Users.findOneAndUpdate(
     { _id: user.id },
     { $set: { verificationToken } }

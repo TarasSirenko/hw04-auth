@@ -10,7 +10,10 @@ const {
 } = require("../services/usersServices");
 
 const createUserController = async (req, res) => {
- await createUser(req.body, res);
+  const { email, password } = req.body;
+
+   const baseUrl = `${req.protocol}://${req.get("host")}`;
+ await createUser(email, password, res, baseUrl);
 };
 
 const updateUserStatusController = async (req, res) => {
@@ -40,15 +43,16 @@ const getUserController = async (req, res) => {
 };
 
 const userVerificationCheckController = async (req, res) => {
-    const { verificationToken } = req.params;
+  const { verificationToken } = req.params;
     await userVerificationCheck(verificationToken);
       return res.status(200).json('Verification successful');
 };
 
 const reVerificationController = async (req, res) => {
-    const { email } = req.body;
+  const { email } = req.body;
+   const baseUrl = `${req.protocol}://${req.get("host")}`;
     if (!email) return res.status(400).json("missing required field email");
-    const user = await reVerification(email);
+    const user = await reVerification(email, baseUrl);
     if (!user) return res.status(400).json("Verification has already been passed");
     return res.status(200).json("Verification email sent");
 };
